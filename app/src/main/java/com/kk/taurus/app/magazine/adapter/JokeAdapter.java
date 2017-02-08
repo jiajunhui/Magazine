@@ -2,6 +2,7 @@ package com.kk.taurus.app.magazine.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -40,7 +41,7 @@ public class JokeAdapter extends RecyclerView.Adapter<JokeAdapter.JokeItemHolder
     @Override
     public void onBindViewHolder(JokeItemHolder holder, int position) {
         JokeRsp.Joke joke = mList.get(position);
-        holder.tvContent.setText(joke.content);
+        holder.tvContent.setText(Html.fromHtml(joke.content));
         holder.tvTime.setText(joke.updatetime);
     }
 
