@@ -1,7 +1,7 @@
 package com.kk.taurus.app.magazine.base;
 
 import com.kk.taurus.baseframe.base.HolderData;
-import com.kk.taurus.http_helper.bean.BaseResponse;
+import com.kk.taurus.http_helper.bean.AbsResponse;
 
 import java.io.Serializable;
 
@@ -9,7 +9,7 @@ import java.io.Serializable;
  * Created by Taurus on 2017/2/4.
  */
 
-public class BaseRsp<T extends HolderData> extends BaseResponse<T> implements Serializable {
+public class BaseRsp<T extends HolderData> extends AbsResponse<T> implements Serializable {
     private int error_code;
     private String reason;
 
