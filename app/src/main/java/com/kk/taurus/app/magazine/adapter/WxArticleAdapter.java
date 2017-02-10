@@ -52,7 +52,6 @@ public class WxArticleAdapter extends RecyclerView.Adapter<WxArticleAdapter.WxAr
         WxArticleRsp.WxArticle wxArticle = mList.get(position);
         Glide.with(mContext)
                 .load(wxArticle.firstImg)
-                .centerCrop()
                 .placeholder(R.mipmap.ic_default_img)
                 .crossFade()
                 .into(holder.ivImg);

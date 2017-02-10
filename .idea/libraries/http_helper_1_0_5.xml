@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="http-helper-1.0.5">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.kk.taurus.http_helper/http-helper/1.0.5/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.kk.taurus.http_helper/http-helper/1.0.5/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.kk.taurus.http_helper/http-helper/1.0.5/18033a438f49916dc66c1ba61378b0e9942b79e6/http-helper-1.0.5-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

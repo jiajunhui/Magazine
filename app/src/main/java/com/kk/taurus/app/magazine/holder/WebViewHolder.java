@@ -12,18 +12,22 @@ import com.kk.taurus.app.magazine.bean.WebPageData;
 import com.kk.taurus.app.magazine.widget.UIWebView;
 import com.kk.taurus.baseframe.base.ContentHolder;
 
+import java.util.List;
+
 /**
  * Created by Taurus on 2017/2/7.
  */
 
-public class WebViewHolder extends ContentHolder<WebPageData> implements UIWebView.OnLoadProgressListener {
+public class WebViewHolder extends ContentHolder<WebPageData> implements UIWebView.OnLoadProgressListener, UIWebView.OnImageListener {
 
     private ProgressBar mProgressBar;
     private RelativeLayout mContainer;
     private UIWebView mWebView;
+    private OnWebViewHolderListener onWebViewHolderListener;
 
-    public WebViewHolder(Context context) {
+    public WebViewHolder(Context context,OnWebViewHolderListener onWebViewHolderListener) {
         super(context);
+        this.onWebViewHolderListener = onWebViewHolderListener;
     }
 
     @Override
@@ -33,6 +37,7 @@ public class WebViewHolder extends ContentHolder<WebPageData> implements UIWebVi
         mContainer = getViewById(R.id.webView_container);
         mWebView = new UIWebView(mContext);
         mWebView.setOnLoadProgressListener(this);
+        mWebView.setOnImageListener(this);
         mWebView.setDefaultSettings();
         mContainer.addView(mWebView,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
     }
@@ -66,5 +71,21 @@ public class WebViewHolder extends ContentHolder<WebPageData> implements UIWebVi
                 mProgressBar.setVisibility(View.GONE);
             }
         }
+    }
+
+    @Override
+    public void onImageParsed(List<String> images) {
+
+    }
+
+    @Override
+    public void onImageClick(List<String> images,String url) {
+        if(onWebViewHolderListener!=null){
+            onWebViewHolderListener.onImageClick(images, url);
+        }
+    }
+
+    public interface OnWebViewHolderListener{
+        void onImageClick(List<String> images, String url);
     }
 }

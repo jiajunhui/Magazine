@@ -7,25 +7,45 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class UIWebView extends WebView {
 	private final String TAG = "UIWebView";
 
+	// 获取img标签正则
+	private static final String IMAGE_URL_TAG = "<img.*src=(.*?)[^>]*?>";
+	// 获取src路径的正则
+	private static final String IMAGE_URL_CONTENT = "http:\"?(.*?)(\"|>|\\s+)";
+
+	private List<String> mImages = new ArrayList<>();
+
 	private OnLoadProgressListener onLoadProgressListener;
 
+	private OnImageListener onImageListener;
+
 	public UIWebView(Context context) {
-		super(context);
+		this(context,null);
+	}
+
+	public UIWebView(Context context, AttributeSet attrs) {
+		this(context, attrs,0);
 	}
 
 	public UIWebView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
+		init(context);
 	}
 
-	public UIWebView(Context context, AttributeSet attrs) {
-		super(context, attrs);
+	protected void init(Context context) {
+		addJavascriptInterface(new ImageHandler(),"imageHandler");
 	}
 
 	@Override
@@ -54,8 +74,6 @@ public class UIWebView extends WebView {
 		webSettings
 				.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
 		this.setBackgroundColor(0x00000000);
-//		this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-//		webSettings.setAllowFileAccess(true);
 
 		this.setHorizontalScrollBarEnabled(false);
 		this.setVerticalScrollBarEnabled(false);
@@ -109,16 +127,85 @@ public class UIWebView extends WebView {
 			if (!view.getSettings().getLoadsImagesAutomatically()) {
 				view.getSettings().setLoadsImagesAutomatically(true);
 			}
+			mImages = new ArrayList<>();
+			setImageClickListner();
+			parseHTML();
 		}
 
 	};
+
+	/**
+	 * 注入 js 函数监听，这段 js 函数的功能就是，遍历所有的图片，并添加 onclick 函数，实现点击事件，
+	 * 函数的功能是在图片点击的时候调用本地java接口并传递 url 过去
+	 */
+	private void setImageClickListner() {
+		// 这段js函数的功能就是，遍历所有的img节点，并添加onclick函数，函数的功能是在图片点击的时候调用本地java接口并传递url过去
+		this.loadUrl("javascript:(function(){" +
+				"var objs = document.getElementsByTagName(\"img\"); " +
+				"for(var i=0;i<objs.length;i++)  " +
+				"{"
+				+ "    objs[i].onclick=function()  " +
+				"    {  "
+				+ "        window.imageHandler.onClickImage(this.src);  " +
+				"    }  " +
+				"}" +
+				"})()");
+	}
+
+	/**
+	 * 解析 HTML 该方法在 setWebViewClient 的 onPageFinished 方法中进行调用
+	 */
+	private void parseHTML() {
+		loadUrl("javascript:window.imageHandler.parseHtml('<head>'+"
+				+ "document.getElementsByTagName('html')[0].innerHTML+'</head>');");
+	}
 
 	public void setOnLoadProgressListener(OnLoadProgressListener onLoadProgressListener) {
 		this.onLoadProgressListener = onLoadProgressListener;
 	}
 
+	public void setOnImageListener(OnImageListener onImageListener) {
+		this.onImageListener = onImageListener;
+	}
+
 	public interface OnLoadProgressListener {
 		void onProgressChanged(WebView webView, int newProgress);
+	}
+
+	public interface OnImageListener{
+		void onImageParsed(List<String> images);
+		void onImageClick(List<String> images,String url);
+	}
+
+	private class ImageHandler{
+
+		@JavascriptInterface
+		public void parseHtml(String html){
+			List<String> images = new ArrayList<>();
+			Matcher matcher = Pattern.compile(IMAGE_URL_TAG).matcher(html);
+			while (matcher.find()){
+				images.add(matcher.group());
+			}
+			for (String image : images) {
+				Matcher matcherSrc = Pattern.compile(IMAGE_URL_CONTENT).matcher(image);
+				while (matcherSrc.find()) {
+					String img = matcherSrc.group().substring(0, matcherSrc.group().length() - 1);
+					Log.d(TAG,img);
+					mImages.add(img);
+				}
+			}
+			if(onImageListener!=null){
+				onImageListener.onImageParsed(mImages);
+			}
+		}
+
+		@JavascriptInterface
+		public void onClickImage(String url){
+			if(onImageListener!=null){
+				onImageListener.onImageClick(mImages,url);
+			}
+		}
+
 	}
 
 

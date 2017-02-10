@@ -23,6 +23,7 @@
         </activity>
 
         <activity android:name=".activity.WebViewActivity"/>
+        <activity android:name=".activity.ScanImagesActivity"/>
 
     </application>
 
