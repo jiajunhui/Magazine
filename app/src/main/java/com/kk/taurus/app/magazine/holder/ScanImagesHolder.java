@@ -35,9 +35,20 @@ public class ScanImagesHolder extends ContentHolder<ImagesData> {
     public void refreshView() {
         super.refreshView();
         final List<String> images = mData.getImages();
-        int currPos = images.indexOf(mData.getCurrUrl());
+        final int currPos = images.indexOf(mData.getCurrUrl());
+
         mViewPager.setAdapter(new ScanImagesAdapter(mContext,mData.getImages()));
-        mViewPager.setCurrentItem(currPos);
+        
+        if(currPos!=-1){
+            mTvState.setText((currPos + 1) + " / " + images.size());
+            mViewPager.post(new Runnable() {
+                @Override
+                public void run() {
+                    mViewPager.setCurrentItem(currPos);
+                }
+            });
+        }
+
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
