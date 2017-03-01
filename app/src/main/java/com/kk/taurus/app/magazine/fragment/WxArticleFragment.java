@@ -11,8 +11,11 @@ import com.kk.taurus.app.magazine.holder.WxArticleFragHolder;
 import com.kk.taurus.baseframe.bean.PageState;
 import com.kk.taurus.baseframe.ui.fragment.StateFragment;
 import com.kk.taurus.http_helper.callback.BeanCallBack;
+import com.kk.taurus.http_helper.callback.HttpCallBack;
 
 import java.util.List;
+
+import okhttp3.Response;
 
 /**
  * Created by Taurus on 2017/2/4.
@@ -37,6 +40,14 @@ public class WxArticleFragment extends StateFragment<WxArticleRsp.WxArticleList,
 
     private void loadData() {
         DataEngine.getWxArticle(pno, ps, new BeanCallBack<WxArticleRsp>() {
+            @Override
+            public void onError(int errorType, Response response) {
+                super.onError(errorType, response);
+                if(errorType== HttpCallBack.ERROR_TYPE_NETWORK){
+                    setPageState(PageState.errorNetWork());
+                }
+            }
+
             @Override
             public void onResponseBean(WxArticleRsp result) {
                 if(result!=null && result.getError_code()==0){

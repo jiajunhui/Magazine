@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -109,6 +110,7 @@ public class UIWebView extends WebView {
 
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
+			Log.d(TAG,"url : " + url);
 			super.onPageStarted(view, url, favicon);
 		}
 
@@ -196,6 +198,12 @@ public class UIWebView extends WebView {
 			}
 			if(onImageListener!=null){
 				onImageListener.onImageParsed(mImages);
+			}
+		}
+
+		private void listDiff(List<String> images){
+			if(images!=null){
+
 			}
 		}
 

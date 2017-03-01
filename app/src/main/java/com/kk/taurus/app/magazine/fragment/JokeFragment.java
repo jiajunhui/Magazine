@@ -8,8 +8,11 @@ import com.kk.taurus.app.magazine.holder.JokeFragHolder;
 import com.kk.taurus.baseframe.bean.PageState;
 import com.kk.taurus.baseframe.ui.fragment.StateFragment;
 import com.kk.taurus.http_helper.callback.BeanCallBack;
+import com.kk.taurus.http_helper.callback.HttpCallBack;
 
 import java.util.List;
+
+import okhttp3.Response;
 
 /**
  * Created by Taurus on 2017/2/7.
@@ -35,6 +38,14 @@ public class JokeFragment extends StateFragment<JokeRsp.JokeList,JokeFragHolder>
 
     private void loadData() {
         DataEngine.getJokes(page,pageSize, new BeanCallBack<JokeRsp>() {
+            @Override
+            public void onError(int errorType, Response response) {
+                super.onError(errorType, response);
+                if(errorType == HttpCallBack.ERROR_TYPE_NETWORK){
+                    setPageState(PageState.errorNetWork());
+                }
+            }
+
             @Override
             public void onResponseBean(JokeRsp result) {
                 if(result!=null && result.getError_code()==0){

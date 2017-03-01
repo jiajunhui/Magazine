@@ -38,7 +38,7 @@ public class ScanImagesHolder extends ContentHolder<ImagesData> {
         final int currPos = images.indexOf(mData.getCurrUrl());
 
         mViewPager.setAdapter(new ScanImagesAdapter(mContext,mData.getImages()));
-        
+
         if(currPos!=-1){
             mTvState.setText((currPos + 1) + " / " + images.size());
             mViewPager.post(new Runnable() {
