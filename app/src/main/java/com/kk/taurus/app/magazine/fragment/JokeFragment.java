@@ -43,6 +43,8 @@ public class JokeFragment extends StateFragment<JokeRsp.JokeList,JokeFragHolder>
                 super.onError(errorType, response);
                 if(errorType == HttpCallBack.ERROR_TYPE_NETWORK){
                     setPageState(PageState.errorNetWork());
+                }else{
+                    setPageState(PageState.error());
                 }
             }
 

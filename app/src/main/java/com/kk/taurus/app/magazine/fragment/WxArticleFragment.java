@@ -45,6 +45,8 @@ public class WxArticleFragment extends StateFragment<WxArticleRsp.WxArticleList,
                 super.onError(errorType, response);
                 if(errorType== HttpCallBack.ERROR_TYPE_NETWORK){
                     setPageState(PageState.errorNetWork());
+                }else{
+                    setPageState(PageState.error());
                 }
             }
 
