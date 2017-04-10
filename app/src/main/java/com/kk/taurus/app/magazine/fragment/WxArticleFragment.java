@@ -52,8 +52,8 @@ public class WxArticleFragment extends StateFragment<WxArticleRsp.WxArticleList,
 
             @Override
             public void onResponseBean(WxArticleRsp result) {
-                if(result!=null && result.getError_code()==0){
-                    setData(result.result);
+                if(result!=null && result.data.error_code==0){
+                    setData(result.data.result);
                     setPageState(PageState.success());
                 }
             }

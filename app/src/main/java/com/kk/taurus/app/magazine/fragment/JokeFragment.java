@@ -50,8 +50,8 @@ public class JokeFragment extends StateFragment<JokeRsp.JokeList,JokeFragHolder>
 
             @Override
             public void onResponseBean(JokeRsp result) {
-                if(result!=null && result.getError_code()==0){
-                    setData(result.result);
+                if(result!=null && result.data.error_code==0){
+                    setData(result.data.result);
                     setPageState(PageState.success());
                 }
             }
