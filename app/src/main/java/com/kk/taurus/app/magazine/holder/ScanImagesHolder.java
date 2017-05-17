@@ -2,6 +2,7 @@ package com.kk.taurus.app.magazine.holder;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 import android.widget.TextView;
 
 import com.kk.taurus.app.magazine.R;
@@ -15,9 +16,10 @@ import java.util.List;
  * Created by Taurus on 2017/2/10.
  */
 
-public class ScanImagesHolder extends ContentHolder<ImagesData> {
+public class ScanImagesHolder extends ContentHolder<ImagesData> implements ScanImagesAdapter.OnItemClickListener {
 
     private ViewPager mViewPager;
+    private ScanImagesAdapter imagesAdapter;
     private TextView mTvState;
 
     public ScanImagesHolder(Context context) {
@@ -35,19 +37,12 @@ public class ScanImagesHolder extends ContentHolder<ImagesData> {
     public void refreshView() {
         super.refreshView();
         final List<String> images = mData.getImages();
-        final int currPos = images.indexOf(mData.getCurrUrl());
 
-        mViewPager.setAdapter(new ScanImagesAdapter(mContext,mData.getImages()));
+        mViewPager.setAdapter(imagesAdapter = new ScanImagesAdapter(mContext,mData.getImages()));
 
-        if(currPos!=-1){
-            mTvState.setText((currPos + 1) + " / " + images.size());
-            mViewPager.post(new Runnable() {
-                @Override
-                public void run() {
-                    mViewPager.setCurrentItem(currPos);
-                }
-            });
-        }
+        imagesAdapter.setOnItemClickListener(this);
+
+        mTvState.setText(1 + " / " + images.size());
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -65,5 +60,10 @@ public class ScanImagesHolder extends ContentHolder<ImagesData> {
 
             }
         });
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        finish();
     }
 }

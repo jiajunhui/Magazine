@@ -3,6 +3,8 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="BaseFrameTheme.ActivityAnimation">
         <!-- Customize your theme here. -->
+        <!--设置toolbar的高度-->
+        <!--<item name="android:layout_height">48dp</item>-->
     </style>
 
 </resources>

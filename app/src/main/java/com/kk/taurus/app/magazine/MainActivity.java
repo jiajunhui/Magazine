@@ -2,15 +2,17 @@ package com.kk.taurus.app.magazine;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
 
+import com.kk.taurus.app.magazine.bean.EventScrollTop;
 import com.kk.taurus.app.magazine.fragment.JokeFragment;
 import com.kk.taurus.app.magazine.fragment.WxArticleFragment;
 import com.kk.taurus.app.magazine.holder.MainPageHolder;
 import com.kk.taurus.baseframe.base.HolderData;
-import com.kk.taurus.baseframe.ui.activity.TopBarActivity;
+import com.kk.taurus.baseframe.ui.activity.ToolBarActivity;
 
-public class MainActivity extends TopBarActivity<HolderData,MainPageHolder> implements MainPageHolder.OnMainPageListener {
+import org.greenrobot.eventbus.EventBus;
+
+public class MainActivity extends ToolBarActivity<HolderData,MainPageHolder> implements MainPageHolder.OnMainPageListener {
 
     private WxArticleFragment wxArticleFragment;
     private JokeFragment jokeFragment;
@@ -29,9 +31,8 @@ public class MainActivity extends TopBarActivity<HolderData,MainPageHolder> impl
     @Override
     public void initData() {
         super.initData();
-        setStatusBarColor(getResources().getColor(com.kk.taurus.baseframe.R.color.top_bar_background));
-        getTopBarNavigationIcon().setVisibility(View.GONE);
-        setTopBarTitle(getString(R.string.app_name));
+        setNavigationIcon(null);
+        setCenterTitle(getString(R.string.app_name));
     }
 
     @Override
@@ -62,5 +63,20 @@ public class MainActivity extends TopBarActivity<HolderData,MainPageHolder> impl
             ft.show(jokeFragment);
         }
         ft.commitAllowingStateLoss();
+    }
+
+    @Override
+    protected void onToolBarDoubleClick() {
+        super.onToolBarDoubleClick();
+        int type = 0;
+        if(wxArticleFragment!=null && !wxArticleFragment.isHidden()){
+            type = EventScrollTop.TYPE_WX;
+        }
+        if(jokeFragment!=null && !jokeFragment.isHidden()){
+            type = EventScrollTop.TYPE_JOKE;
+        }
+        EventScrollTop event = new EventScrollTop();
+        event.setType(type);
+        EventBus.getDefault().post(event);
     }
 }

@@ -6,7 +6,7 @@ import android.os.Bundle;
 import com.kk.taurus.app.magazine.bean.ImagesData;
 import com.kk.taurus.app.magazine.bean.WebPageData;
 import com.kk.taurus.app.magazine.holder.WebViewHolder;
-import com.kk.taurus.baseframe.ui.activity.TopBarActivity;
+import com.kk.taurus.baseframe.ui.activity.ToolBarActivity;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import java.util.List;
  * Created by Taurus on 2017/2/7.
  */
 
-public class WebViewActivity extends TopBarActivity<WebPageData,WebViewHolder> implements WebViewHolder.OnWebViewHolderListener {
+public class WebViewActivity extends ToolBarActivity<WebPageData,WebViewHolder> implements WebViewHolder.OnWebViewHolderListener {
 
     public static final String KEY_WEB_PAGE_DATA = "web_page_data";
 
@@ -26,14 +26,13 @@ public class WebViewActivity extends TopBarActivity<WebPageData,WebViewHolder> i
     @Override
     public void initData() {
         super.initData();
-        setStatusBarColor(getResources().getColor(com.kk.taurus.baseframe.R.color.top_bar_background));
     }
 
     @Override
     public void parseIntent() {
         super.parseIntent();
         WebPageData webPageData = (WebPageData) getIntent().getSerializableExtra(KEY_WEB_PAGE_DATA);
-        setTopBarTitle(webPageData.getTitle());
+        setToolBarTitle(webPageData.getTitle());
         setData(webPageData);
     }
 

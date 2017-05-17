@@ -12,6 +12,7 @@ import com.kk.taurus.app.magazine.bean.WebPageData;
 import com.kk.taurus.app.magazine.widget.UIWebView;
 import com.kk.taurus.baseframe.base.ContentHolder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -80,8 +81,14 @@ public class WebViewHolder extends ContentHolder<WebPageData> implements UIWebVi
 
     @Override
     public void onImageClick(List<String> images,String url) {
+        List<String> result = new ArrayList<>();
+        for(String image : images){
+            if(!image.contains("wx_lazy=1")){
+                result.add(image);
+            }
+        }
         if(onWebViewHolderListener!=null){
-            onWebViewHolderListener.onImageClick(images, url);
+            onWebViewHolderListener.onImageClick(result, url);
         }
     }
 

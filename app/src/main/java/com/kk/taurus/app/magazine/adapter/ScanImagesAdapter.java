@@ -20,10 +20,15 @@ public class ScanImagesAdapter extends PagerAdapter {
 
     private Context mContext;
     private List<String> mImages = new ArrayList<>();
+    private OnItemClickListener onItemClickListener;
 
     public ScanImagesAdapter(Context context, List<String> images){
         this.mContext = context;
         this.mImages = images;
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 
     @Override
@@ -32,9 +37,18 @@ public class ScanImagesAdapter extends PagerAdapter {
     }
 
     @Override
-    public View instantiateItem(ViewGroup container, int position) {
-        ImageView imageView = new ImageView(mContext);
+    public View instantiateItem(ViewGroup container, final int position) {
+        final ImageView imageView = new ImageView(mContext);
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(onItemClickListener!=null){
+                    onItemClickListener.onItemClick(imageView,position);
+                }
+            }
+        });
 
         Glide.with(mContext)
                 .load(mImages.get(position))
@@ -54,5 +68,9 @@ public class ScanImagesAdapter extends PagerAdapter {
     @Override
     public boolean isViewFromObject(View view, Object object) {
         return view == object;
+    }
+
+    public interface OnItemClickListener{
+        void onItemClick(View view,int position);
     }
 }

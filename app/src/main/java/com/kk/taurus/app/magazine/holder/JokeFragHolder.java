@@ -8,9 +8,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.kk.taurus.app.magazine.R;
 import com.kk.taurus.app.magazine.adapter.JokeAdapter;
+import com.kk.taurus.app.magazine.bean.EventScrollTop;
 import com.kk.taurus.app.magazine.bean.JokeRsp;
 import com.kk.taurus.app.magazine.widget.divider.HorizontalDividerItemDecoration;
 import com.kk.taurus.baseframe.base.ContentHolder;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +38,7 @@ public class JokeFragHolder extends ContentHolder<JokeRsp.JokeList> implements X
 
     @Override
     public void onCreate() {
+        EventBus.getDefault().register(this);
         setContentView(R.layout.fragment_joke);
         mRecycler = getViewById(R.id.recycler);
     }
@@ -80,6 +85,19 @@ public class JokeFragHolder extends ContentHolder<JokeRsp.JokeList> implements X
         if(onJokeListener!=null){
             onJokeListener.onLoadMore(mList);
         }
+    }
+
+    @Subscribe
+    public void onEvent(EventScrollTop event){
+        if(event.getType()==EventScrollTop.TYPE_JOKE){
+            mRecycler.smoothScrollToPosition(0);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     public interface OnJokeListener{
